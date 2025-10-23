@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react'
 import ProductCard from '../components/ProductCard';
+import { useAppContext } from '../context/CartContext';
 
-function Home({ products }) {
+function Home() {
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, [])
+  const {products, loading} = useAppContext();
 
   if (loading) {
     return (
