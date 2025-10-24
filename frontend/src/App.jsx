@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import { AppProvider } from "./context/CartContext";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import {Login} from './pages/Login';
 import { Register } from "./pages/Register";
 import { NotFound } from "./pages/NotFound";
@@ -19,11 +20,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </Router>
     </AppProvider>
   );

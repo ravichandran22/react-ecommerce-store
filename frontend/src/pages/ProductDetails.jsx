@@ -1,10 +1,9 @@
-import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAppContext } from "../context/CartContext";
 
 function ProductDetails() {
   const { id } = useParams();
-  const { products, loading } = useAppContext();
+  const { products, loading, addToCart } = useAppContext();
 
   if (loading) {
     return (
@@ -26,7 +25,7 @@ function ProductDetails() {
     );
   }
 
-  const {title, imageURL, description, stock, price} = product;
+  const { title, imageURL, description, stock, price } = product;
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -58,9 +57,16 @@ function ProductDetails() {
             <span className="font-medium">In Stock:</span> {stock}
           </p>
 
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+          <button
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 cursor-pointer"
+            onClick={() => {
+              addToCart(product);
+              alert(`${product.title} added to cart!`);
+            }}
+          >
             Add to Cart
           </button>
+
         </div>
       </div>
     </div>

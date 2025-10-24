@@ -109,6 +109,19 @@ export const AppProvider = ({ children }) => {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cart, setCart] = useState(() => {
+    try {
+      const storedCart = localStorage.getItem("cart");
+      if (storedCart && storedCart !== "undefined") {
+        return JSON.parse(storedCart);
+      }
+    } catch (error) {
+      console.error("Error parsing cart from localStorage:", error);
+    }
+    return [];
+  });
+
+
 
   useEffect(() => {
     // Simulate product loading delay
@@ -120,8 +133,45 @@ export const AppProvider = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart])
+
+  // Add to Cart
+  const addToCart = (product) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === product.id);
+
+      if (existingItem) {
+        return prevCart.map((item) => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+      }
+      else {
+        return [...prevCart, { ...product, quantity: 1 }];
+      }
+    })
+  }
+
+  // Remove Item
+  const removeFromCart = (id) => {
+    setCart(cart.filter((item) => item.id !== id));
+  }
+
+  // Update Quantity
+  const updateQuantity = (id, quantity) => {
+    setCart(cart.map((item) => item.id === id ? { ...item, quantity: Math.max(1, Number(quantity)) } : item))
+  }
+
+  // Clear Cart
+  const clearCart = () => setCart([]);
+
+  // Calculate Total
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
   return (
-    <AppContext.Provider value={{ products, loading }}>{children}</AppContext.Provider>
+    <AppContext.Provider value={{ products, loading, cart, addToCart, removeFromCart, updateQuantity, clearCart, total }}>{children}</AppContext.Provider>
   );
 };
 
