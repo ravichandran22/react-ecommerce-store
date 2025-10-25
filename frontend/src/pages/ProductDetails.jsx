@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useAppContext } from "../context/CartContext";
+import { toast } from "react-toastify";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -25,7 +26,7 @@ function ProductDetails() {
     );
   }
 
-  const { title, imageURL, description, stock, price } = product;
+  const { title, image, description, stock, price } = product;
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -40,7 +41,7 @@ function ProductDetails() {
         {/* Image */}
         <div className="flex justify-center items-center">
           <img
-            src={imageURL}
+            src={image}
             alt={title}
             className="rounded-lg shadow-lg w-full max-w-md"
           />
@@ -61,7 +62,7 @@ function ProductDetails() {
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 cursor-pointer"
             onClick={() => {
               addToCart(product);
-              alert(`${product.title} added to cart!`);
+              toast.info(`${product.title} added to cart!`);
             }}
           >
             Add to Cart

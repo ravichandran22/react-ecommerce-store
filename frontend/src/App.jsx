@@ -7,9 +7,12 @@ import { AppProvider } from "./context/CartContext";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
-import {Login} from './pages/Login';
+import { Login } from './pages/Login';
 import { Register } from "./pages/Register";
 import { NotFound } from "./pages/NotFound";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ShopByCategory from "./pages/ShopByCategory";
 
 function App() {
   return (
@@ -18,6 +21,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/category" element={<ShopByCategory />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
@@ -25,8 +29,21 @@ function App() {
           <Route path="/signup" element={<Register />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* <Footer /> */}
       </Router>
+
+      {/* Global Toast */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </AppProvider>
   );
 }

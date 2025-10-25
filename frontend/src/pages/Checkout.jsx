@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Checkout() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page reload
-    setIsModalOpen(true); // Open confirmation modal
+    e.preventDefault();
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
