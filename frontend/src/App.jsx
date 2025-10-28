@@ -13,6 +13,9 @@ import { NotFound } from "./pages/NotFound";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ShopByCategory from "./pages/ShopByCategory";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import {AddProduct} from "./pages/admin/AddProduct";
+import {EditProduct} from "./pages/admin/EditProduct";
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/add" element={<AddProduct />} />
+          <Route path="/admin/edit" element={<EditProduct />} />
         </Routes>
       </Router>
 
