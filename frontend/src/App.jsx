@@ -32,8 +32,8 @@ function App() {
           <Route path="/signup" element={<Register />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/add" element={<AddProduct />} />
-          <Route path="/admin/edit" element={<EditProduct />} />
+          <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/edit-product/:id" element={<EditProduct />} />
         </Routes>
       </Router>
 

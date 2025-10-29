@@ -132,25 +132,39 @@ export const AppProvider = ({ children }) => {
   //   return () => clearTimeout(timer);
   // }, []);
 
-  // Fetch products from FakeStoreAPI
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await axios.get('https://fakestoreapi.com/products');
-        setProducts(res.data);
-      }
-      catch (error) {
-        console.error('Error Fetching Products:', error);
-      } finally {
-        setLoading(false);
-      }
+    const storedProducts = localStorage.getItem("products");
+
+    if (storedProducts) {
+      setProducts(JSON.parse(storedProducts));
+      setLoading(false);
+    } else {
+      const fetchProducts = async () => {
+        try {
+          const res = await axios.get("https://fakestoreapi.com/products");
+          setProducts(res.data);
+          localStorage.setItem("products", JSON.stringify(res.data));
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProducts();
     }
-    fetchProducts();
   }, []);
 
+  // Update localStorage when products change
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart])
+    if (products.length > 0) {
+      localStorage.setItem("products", JSON.stringify(products));
+    }
+  }, [products]);
+
+  // Update localStorage when cart changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   // Add to Cart
   const addToCart = (product) => {
@@ -186,9 +200,42 @@ export const AppProvider = ({ children }) => {
     0
   );
 
+  // Add Product
+  const addProduct = (newProduct) => {
+    setProducts((prev) => [...prev, newProduct]);
+    toast.success("Product added successfully!");
+  };
+
+  // Edit Product
+  const editProduct = (updatedProduct) => {
+    setProducts((prev) =>
+      prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
+    );
+    toast.success("Product updated successfully!");
+  };
+
+  // Delete Product
+  const deleteProduct = (id) => {
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+    toast.warn("Product deleted");
+  };
+
   return (
     <AppContext.Provider
-      value={{ products, loading, cart, addToCart, removeFromCart, updateQuantity, clearCart, total }}>{children}</AppContext.Provider>
+      value={{
+        products,
+        loading,
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        total,
+        setProducts,
+        addProduct,
+        editProduct,
+        deleteProduct
+      }}>{children}</AppContext.Provider>
   );
 };
 

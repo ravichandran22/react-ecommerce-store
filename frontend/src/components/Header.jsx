@@ -39,7 +39,9 @@ function Header() {
             <NavLink to="/login">Login</NavLink>
           </li>}
 
-
+          <li className="hover:text-black">
+            <NavLink to="/admin">Admin</NavLink>
+          </li>
           <li className="hover:text-black">
             <NavLink to="/cart">
               <FaShoppingCart className="text-xl" />
