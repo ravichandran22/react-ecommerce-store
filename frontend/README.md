@@ -86,19 +86,6 @@ It includes a complete **user-facing shopping experience** and an **admin dashbo
 
 ---
 
-## 📷 Screenshots
-
-### 🏠 Home Page  
-![Home Page](./frontend/screenshots/home.png)
-
-### 🛒 Cart Page  
-![Cart Page](./frontend/screenshots/cart.png)
-
-### ⚙️ Admin Dashboard  
-![Admin Dashboard](./frontend/screenshots/admin.png)
-
----
-
 ## 🤝 Connect With Me
 👤 **Ravichandran R**  
 🌐 [Portfolio](https://ravichandran-r.vercel.app/)  
