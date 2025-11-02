@@ -1,24 +1,30 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { toast } from "react-toastify";
+import TextInput from "../components/TextInput";
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (email.trim() === '' || password.trim() === '') {
-      toast.warning('All fields Required');
+    const { email, password } = formData;
+
+    if (email.trim() === "" || password.trim() === "") {
+      toast.warning("All fields are required");
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem('user')) || [];
+    const users = JSON.parse(localStorage.getItem("user")) || [];
 
     if (users.length === 0) {
-      toast.info('No user found, Please Register first');
+      toast.info("No user found. Please register first.");
       return;
     }
 
@@ -27,46 +33,82 @@ export const Login = () => {
     );
 
     if (foundUser) {
-      localStorage.setItem('loggedInUser', JSON.stringify(foundUser));
-      toast.success('Login successful!');
-      navigate('/');
+      localStorage.setItem("loggedInUser", JSON.stringify(foundUser));
+      toast.success("Login successful!");
+      navigate("/");
     } else {
-      toast.error('Invalid email or password');
+      toast.error("Invalid email or password");
     }
   };
 
-
   return (
-    <div className="bg-blue-100 text-white min-h-screen flex justify-center items-center">
-      <div className="bg-white rounded shadow-lg hover:shadow-xl p-4 h-100 w-100">
-        <h1 className="text-3xl font-bold text-center mb-4 text-black">
-          Login
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 p-4">
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8 sm:p-10">
+
+        <h1 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
+          Welcome Back
         </h1>
-        <form action="" className="mt-10 space-y-5" onSubmit={handleSubmit}>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="block w-full rounded-md bg-white px-3 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 placeholder:font-semi-bold focus:outline-2 focus:-outline-offset-2 focus:outline-purple-600 sm:text-sm/6"
-          />
-          <input
-            id="password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            className="block w-full rounded-md bg-white px-3 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 placeholder:font-semi-bold focus:outline-2 focus:-outline-offset-2 focus:outline-purple-600 sm:text-sm/6"
-          />
+        <p className="text-center text-gray-500 mb-8">
+          Login to your account to continue
+        </p>
 
-          <p className="text-purple-500 font-semi-bold hover:text-purple-700 cursor-pointer">Forgot password?</p>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Email Address
+            </label>
+            <TextInput
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="you@example.com"
+            />
+          </div>
 
-          <button className="bg-blue-100 text-black font-bold shadow-lg hover:bg-blue-500 hover:shadow-xl px-4 py-2 rounded w-full hover:text-white">Log in</button>
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Password
+            </label>
+            <TextInput
+              id="password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+            />
+          </div>
 
-          <p className="text-black font-bold text-center">Don't have an account? <span className="text-purple-500 font-semi-bold hover:text-purple-700 cursor-pointer"><Link to='/signup'>Signup</Link></span></p>
+          <div className="text-right">
+            <span className="text-indigo-600 hover:text-indigo-800 text-sm font-medium cursor-pointer">
+              Forgot password?
+            </span>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-purple-600 hover:to-indigo-600 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-500 active:scale-95"
+          >
+            Log In
+          </button>
+
+          <p className="text-center text-gray-700 font-medium mt-4">
+            Don’t have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-indigo-600 hover:text-indigo-800 font-semibold"
+            >
+              Sign Up
+            </Link>
+          </p>
         </form>
       </div>
     </div>

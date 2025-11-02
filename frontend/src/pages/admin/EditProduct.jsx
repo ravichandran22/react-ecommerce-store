@@ -90,13 +90,14 @@ export const EditProduct = () => {
           onChange={handleChange}
         />
 
-        {/* <TextInput
+        <TextInput
           label="Description"
           name="description"
           type="textarea"
           value={formData.description}
           onChange={handleChange}
-        /> */}
+          rows="4"
+        />
 
         <label className="block text-gray-700 font-semibold mb-2">Count:</label>
         <TextInput

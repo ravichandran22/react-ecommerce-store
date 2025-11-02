@@ -8,58 +8,90 @@ export const AddProduct = () => {
   const { addProduct, products } = useAppContext();
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
+  const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [count, setCount] = useState('');
   const [image, setImage] = useState(null);
-
+  const [status, setStatus] = useState("idle");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!title || !price) return;
+
+    setStatus("saving");
+
     const newProduct = {
       id: products.length + 1,
       title,
       category,
+      description,
       price: parseFloat(price),
       image: image ? URL.createObjectURL(image) : "",
-      rating: { rate: 0, count: parseInt(count) },
+      rating: { rate: 0, count: parseInt(count) || 0 },
     };
-    addProduct(newProduct);
-    navigate('/admin');
+
+    try {
+      addProduct(newProduct);
+      setStatus("success");
+      setTimeout(() => navigate('/admin'), 1000);
+    } catch (err) {
+      console.error(err);
+      setStatus("idle");
+    }
   };
+
+  const isDisabled = !title || !price || status === "saving";
 
   return (
     <div className="container mx-auto px-4 py-10">
-      <div className="flex justify-between items-center container mx-auto w-3xl mb-6">
-        <h1 className="font-bold text-2xl text-center mb-0">Add Product</h1>
-        <Link to='/admin'><button className="bg-blue-600 text-white px-4 py-1 rounded cursor-pointer hover:bg-blue-700">Back</button></Link>
+      <div className="flex flex-col sm:flex-row justify-between items-center w-full mb-6 gap-4">
+        <h1 className="font-bold text-2xl text-center sm:text-left mb-0">Add Product</h1>
+        <Link to='/admin'>
+          <button className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">
+            Back
+          </button>
+        </Link>
       </div>
-      <div className="bg-gray-200 rounded p-4 mx-auto w-3xl">
 
-        <form onSubmit={handleSubmit} action="" className="space-y-6">
+      <div className="bg-gray-200 rounded p-4 mx-auto w-full sm:w-3xl">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <TextInput
             id='ProductTitle'
-            name='product title'
+            name='title'
             value={title}
             type='text'
             onChange={(e) => setTitle(e.target.value)}
             placeholder='Enter the product title'
+            required
           />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <TextInput
               id='ProductCategory'
-              name='product category'
+              name='category'
               value={category}
               type='text'
               onChange={(e) => setCategory(e.target.value)}
               placeholder='Enter the category name'
             />
+
+            <TextInput
+              id='description'
+              name='description'
+              value={description}
+              type='textarea'
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder='Enter product description'
+            />
+
             <TextInput
               id='ProductImage'
               accept="image/*"
               type='file'
               onChange={(e) => setImage(e.target.files[0])}
-              placeholder='Upload product images'
             />
+
             <TextInput
               id='price'
               name='price'
@@ -67,7 +99,9 @@ export const AddProduct = () => {
               type='number'
               onChange={(e) => setPrice(e.target.value)}
               placeholder='Enter price'
+              required
             />
+
             <TextInput
               id='count'
               name='count'
@@ -78,17 +112,30 @@ export const AddProduct = () => {
             />
           </div>
 
-          <div className="flex justify-end mt-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 mt-4">
             <button
               type="submit"
-              className="bg-blue-500 text-white font-bold shadow-lg hover:bg-blue-700 px-6 py-2 rounded hover:text-white cursor-pointer transition"
+              disabled={isDisabled}
+              className={`px-6 py-2 rounded font-bold w-full sm:w-auto text-center
+                ${
+                  status === "saving"
+                    ? "bg-yellow-400 text-white cursor-wait"
+                    : status === "success"
+                    ? "bg-green-600 text-white"
+                    : isDisabled
+                    ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                    : "bg-blue-500 hover:bg-blue-700 text-white"
+                }`}
             >
-              Add
+              {status === "saving"
+                ? "Adding..."
+                : status === "success"
+                ? "Added!"
+                : "Add"}
             </button>
           </div>
-
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
