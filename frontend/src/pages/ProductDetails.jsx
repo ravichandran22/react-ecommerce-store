@@ -6,11 +6,11 @@ function ProductDetails() {
   const { id } = useParams();
   const { products, loading, addToCart } = useAppContext();
 
-  if (loading) {
+  if (loading || !products.length) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-gray-500 text-lg animate-pulse">
-          Loading Products...
+          Loading Product Details...
         </p>
       </div>
     );
@@ -32,8 +32,21 @@ function ProductDetails() {
     );
   }
 
-  const { title, image, description, stock, price } = product;
+  const { title, image, description, price } = product;
+  const stock = product.rating?.count || 10;
   const formattedPrice = price.toFixed(2);
+
+  const handleAddToCart = () => {
+    if (!product || !product.id) {
+      toast.error("Product data not loaded yet!");
+      return;
+    }
+
+    if (stock > 0) {
+      addToCart(product);
+      toast.success(`${product.title} added to cart!`);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -56,28 +69,20 @@ function ProductDetails() {
         <div className="flex flex-col justify-center">
           <h1 className="text-3xl font-bold mb-4">{title}</h1>
           <p className="text-gray-600 mb-4">{description}</p>
-
           <p className="text-2xl font-semibold mb-4 text-green-600">
             ${formattedPrice}
           </p>
-
           <p className="text-gray-700 mb-6">
             <span className="font-medium">In Stock:</span>{" "}
             {stock > 0 ? stock : "Out of Stock"}
           </p>
-
           <button
             className={`bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-purple-500 hover:to-indigo-500 text-white font-medium px-5 py-3 rounded-lg hover:opacity-90 active:scale-95 text-sm cursor-pointer transition-all duration-500 shadow-md hover:shadow-lg ${
               stock === 0
                 ? "opacity-60 cursor-not-allowed hover:opacity-60 active:scale-100"
                 : ""
             }`}
-            onClick={() => {
-              if (stock > 0) {
-                addToCart(product);
-                toast.success(`${product.title} added to cart!`);
-              }
-            }}
+            onClick={handleAddToCart}
             disabled={stock === 0}
           >
             {stock === 0 ? "Out of Stock" : "Add to Cart"}
